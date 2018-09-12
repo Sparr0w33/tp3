@@ -5,6 +5,9 @@ import org.junit.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import java.sql.Driver;
+import java.util.concurrent.TimeUnit;
+
 import static org.hamcrest.core.Is.is;
 
 
@@ -18,6 +21,7 @@ public class TP3 {
         driver = new ChromeDriver();
         driver.get("https://www.google.com");
         driver.manage().window().maximize();
+        driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     }
     @After
     public void closeBrowser(){
@@ -25,13 +29,45 @@ public class TP3 {
     }
 
     @Test
-    public void test1()
+    public void testEnter()
     {
-        HomePage homePage = new HomePage();
-        homePage.recherche("Bordeaux");
+        //Arrange
+        String expectedResult ="Site officiel de la ville de Bordeaux | Bordeaux";
+        int resultNumber = 0;
+        //Act
+        HomePage homePage = new HomePage(driver);
+        ResultsPage resultsPage = homePage.rechercheAvecEntree("Bordeaux");
+        String result = resultsPage.getResult(resultNumber);
 
-        ResultsPage resultsPage = new ResultsPage();
-        Assert.assertThat(resultsPage.getResult(0), is ("Site officiel de la ville de Bordeaux | Bordeaux"));
+        //Assert
+        Assert.assertThat(result, is(expectedResult));
+    }
+
+    @Test
+    public void testClick()
+    {
+        //Arrange
+        String expectedResult ="Site officiel de la ville de Bordeaux | Bordeaux";
+        int resultNumber = 0;
+        //Act
+        HomePage homePage = new HomePage(driver);
+        ResultsPage resultsPage = homePage.rechercheAvecClick("Bordeaux");
+        String result = resultsPage.getResult(resultNumber);
+
+        //Assert
+        Assert.assertThat(result, is(expectedResult));
+    }
+    @Test
+    public void testClick2()
+    {
+
+        HomePage homePage = new HomePage(driver);
+         ;
+        String result = homePage.rechercheAvecClick("Bordeaux")
+                                .getResult(0);
+
+        //Assert
+        Assert.assertThat(result, is("Site officiel de la ville de Bordeaux | Bordeaux"));
     }
 
 }
